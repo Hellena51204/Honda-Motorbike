@@ -34,10 +34,10 @@
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav gap-4">
-                    <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Products</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Sản phẩm</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Quản trị</a></li>
                 </ul>
             </div>
             <div class="d-flex gap-3">
@@ -56,26 +56,26 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <span class="honda-red text-white fw-bold px-3 py-1 rounded fs-5">HONDA</span>
-                    <p class="mt-3 text-secondary">Leading motorcycle manufacturer delivering quality, innovation, and performance since 1948.</p>
+                    <p class="mt-3 text-secondary">Nhà sản xuất xe máy hàng đầu mang đến chất lượng, sự đổi mới và hiệu suất từ năm 1948.</p>
                 </div>
                 <div class="col-md-3">
-                    <h5>Quick Links</h5>
+                    <h5>Liên kết nhanh</h5>
                     <ul class="list-unstyled text-secondary line-height-lg">
-                        <li>All Products</li>
-                        <li>Contact Us</li>
-                        <li>About Honda</li>
+                        <li>Tất cả sản phẩm</li>
+                        <li>Liên hệ chúng tôi</li>
+                        <li>Về Honda</li>
                     </ul>
                 </div>
                 <div class="col-md-3">
-                    <h5>Customer Service</h5>
+                    <h5>Chăm sóc khách hàng</h5>
                     <ul class="list-unstyled text-secondary">
-                        <li>FAQ</li>
-                        <li>Financing Options</li>
-                        <li>Test Ride</li>
+                        <li>Câu hỏi thường gặp</li>
+                        <li>Tùy chọn trả góp</li>
+                        <li>Đăng ký lái thử</li>
                     </ul>
                 </div>
                 <div class="col-md-2">
-                    <h5>Contact Info</h5>
+                    <h5>Thông tin liên hệ</h5>
                     <ul class="list-unstyled text-secondary">
                         <li><i class="fa-solid fa-location-dot me-2"></i> 123 Honda St, HCM</li>
                         <li><i class="fa-solid fa-phone me-2"></i> 1800-123-456</li>
