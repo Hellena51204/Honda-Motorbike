@@ -52,12 +52,12 @@
             </div>
 
             <div class="d-grid gap-2 d-md-flex mt-5">
-                <button class="btn btn-dark btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm">
+                <a href="{{ route('contact.index') }}" class="btn btn-dark btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm">
                     <i class="fa-solid fa-calendar-check me-2"></i> ĐĂNG KÝ LÁI THỬ
-                </button>
-                <button class="btn btn-outline-danger btn-lg px-4 py-3 rounded-pill fw-bold border-2">
+                </a>
+                <a href="{{ route('contact.index') }}" class="btn btn-outline-danger btn-lg px-4 py-3 rounded-pill fw-bold border-2">
                     <i class="fa-solid fa-phone me-2"></i> TƯ VẤN NGAY
-                </button>
+                </a>
             </div>
 
             <div class="mt-4 p-3 bg-white border rounded-3 d-flex align-items-center">

@@ -35,7 +35,7 @@
                     <span>Màu sắc:</span>
                     @if($product->colors)
                     @foreach($product->colors as $color)
-                    <div class="color-circle" style="background-color: {{ $color }}; {{ $color == '#ffffff' ? 'border: 1px solid #ddd;' : '' }}"></div>
+                    <div class="color-circle" @style(['background-color: ' . $color, 'border: 1px solid #ddd' => $color == '#ffffff'])></div>
                     @endforeach
                     @endif
                 </div>

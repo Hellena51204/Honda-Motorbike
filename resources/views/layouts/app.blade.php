@@ -67,7 +67,7 @@
             </button>
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="navbar-nav gap-4">
-                    <li class="nav-item"><a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="{{ url('/') }}">Trang chủ</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->is('products*') ? 'active' : '' }}" href="/products">Sản phẩm</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->is('contact*') ? 'active' : '' }}" href="{{ route('contact.index') }}">Liên hệ</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Quản trị</a></li>
