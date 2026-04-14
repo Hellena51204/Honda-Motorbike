@@ -44,7 +44,9 @@
                         <span class="price-label">Giá từ</span>
                         <span class="price-value">{{ number_format($product->price, 0, ',', '.') }} VNĐ</span>
                     </div>
-                    <a href="#" class="btn-arrow-red"><i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="{{ route('products.show', $product->id) }}" class="btn-arrow-red">
+    <i class="fa-solid fa-arrow-right"></i>
+</a>
                 </div>
             </div>
         </div>
