@@ -1,6 +1,156 @@
 @extends('layouts.app')
 
 @section('content')
+
+<style>
+/* Custom CSS for Products Page */
+.page-header h1 {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.page-header p {
+    color: #6c757d;
+}
+.filter-container {
+    margin: 2rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+.filter-header {
+    font-weight: bold;
+    margin-right: 1rem;
+}
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.filter-btn {
+    border: 1px solid #ddd;
+    background: transparent;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.filter-btn.active, .filter-btn:hover {
+    background: #cc0000;
+    color: white;
+    border-color: #cc0000;
+}
+.product-grid-v2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+.product-item-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease;
+}
+.product-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+.card-img-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+.card-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.card-img-wrapper .badge {
+    position: absolute;
+    top: 10px;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.badge-left {
+    left: 10px;
+    background: #cc0000;
+    color: white;
+}
+.badge-right {
+    right: 10px;
+    background: white;
+    color: #333;
+    border: 1px solid #ddd;
+}
+.card-info {
+    padding: 1.5rem;
+}
+.card-info h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+.card-info .desc {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.colors {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.color-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+.price-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+.price-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+.price-value {
+    font-weight: bold;
+    color: #cc0000;
+    font-size: 1.1rem;
+}
+.btn-arrow-red {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    color: #cc0000;
+    border: 2px solid #cc0000;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+.btn-arrow-red:hover {
+    background: #cc0000;
+    color: white;
+}
+</style>
+
 <div class="products-page container my-4">
     <div class="page-header">
         <h1>Danh Mục Xe Máy</h1>

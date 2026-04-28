@@ -82,11 +82,7 @@
                             <label class="form-label fw-bold">Địa chỉ Email *</label>
                             <input type="email" name="email" class="form-control form-control-lg rounded-3 bg-light border-0" placeholder="email_cua_ban@example.com" required>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Số điện thoại</label>
-                            <input type="text" name="phone" class="form-control form-control-lg rounded-3 bg-light border-0" placeholder="Ví dụ: +84 912 345 678">
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <label class="form-label fw-bold">Chủ đề cần tư vấn *</label>
                             <select name="subject" class="form-select form-control-lg rounded-3 bg-light border-0" required>
                                 <option value="" disabled selected>Chọn chủ đề</option>
@@ -172,35 +168,6 @@
     </div>
 </div>
 
-<button class="btn honda-red text-white position-fixed bottom-0 end-0 m-4 rounded-pill shadow-lg px-4 py-3 fw-bold z-3" data-bs-toggle="modal" data-bs-target="#chatModal">
-    <i class="fa-solid fa-headset me-2"></i> Chat với CSKH
-</button>
-
-<div class="modal fade" id="chatModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 400px;">
-        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            <div class="modal-header honda-red text-white border-0 py-3">
-                <h5 class="modal-title fw-bold"><i class="fa-solid fa-headset me-2"></i> CSKH Trực tuyến</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-light" style="min-height: 300px;">
-                <div class="d-flex mb-3">
-                    <div class="bg-white p-3 rounded-3 shadow-sm" style="border-bottom-left-radius: 0 !important; max-width: 85%;">
-                        Chào bạn! Honda Showroom có thể giúp gì cho bạn hôm nay?
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer bg-white border-0 py-3">
-                <div class="input-group">
-                    <input type="text" class="form-control rounded-pill bg-light border-0 ps-3" placeholder="Nhập tin nhắn...">
-                    <button class="btn honda-red text-white rounded-circle ms-2" type="button" style="width: 45px; height: 45px;" onclick="alert('Tin nhắn đã được gửi tới tư vấn viên! Chúng tôi sẽ phản hồi trong chốc lát.')">
-                        <i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <style>
     .transition {

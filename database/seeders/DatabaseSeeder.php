@@ -15,14 +15,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Tạo tự động 1 tài khoản Admin
+        User::create([
+            'name' => 'Quản trị viên Honda',
+            'email' => 'admin@honda.com',
+            'password' => bcrypt('12345678'), // Mật khẩu đăng nhập
+            'role' => 'admin',
         ]);
 
-        // Đổ dữ liệu Sản phẩm mẫu
+        // Tạo tự động 1 tài khoản Khách hàng để test
+        User::create([
+            'name' => 'User',
+            'email' => 'user@honda.com',
+            'password' => bcrypt('12345678'),
+            'role' => 'user',
+        ]);
+
+        // Tạo dữ liệu xe máy mẫu
         $this->call([
             ProductSeeder::class,
         ]);

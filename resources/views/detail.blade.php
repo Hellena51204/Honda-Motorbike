@@ -12,15 +12,42 @@
 
     <div class="row g-5">
         <div class="col-md-6">
-            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
-                <img src="{{ $product->image }}" class="img-fluid" alt="{{ $product->name }}">
+            @php
+                $all_images = [$product->image];
+                if (!empty($product->images)) {
+                    $all_images = array_merge($all_images, $product->images);
+                }
+            @endphp
+
+            <div id="productCarousel" class="carousel slide card border-0 shadow-sm rounded-4 overflow-hidden" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @foreach($all_images as $index => $img)
+                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                        <img src="{{ $img }}" class="d-block w-100 object-fit-cover" style="height: 450px; background-color: #f8f9fa;" alt="{{ $product->name }}">
+                    </div>
+                    @endforeach
+                </div>
+                @if(count($all_images) > 1)
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon rounded-circle bg-dark p-2" aria-hidden="true" style="width: 2rem; height: 2rem; background-size: 50%;"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon rounded-circle bg-dark p-2" aria-hidden="true" style="width: 2rem; height: 2rem; background-size: 50%;"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                @endif
             </div>
             
-            <div class="d-flex gap-2 mt-3">
-                <img src="{{ $product->image }}" class="img-thumbnail rounded-3" style="width: 80px; cursor: pointer;">
-                <div class="bg-secondary-subtle rounded-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 12px; color: #666;">
-                    +3 Ảnh
-                </div>
+            <!-- Thumbnails -->
+            <div class="d-flex gap-2 mt-3 overflow-auto" style="white-space: nowrap; padding-bottom: 5px;">
+                @foreach($all_images as $index => $img)
+                    <img src="{{ $img }}" 
+                         data-bs-target="#productCarousel" 
+                         data-bs-slide-to="{{ $index }}" 
+                         class="img-thumbnail rounded-3 {{ $index == 0 ? 'border-danger border-2' : '' }} thumbnail-nav" 
+                         style="width: 80px; height: 60px; object-fit: cover; cursor: pointer;">
+                @endforeach
             </div>
         </div>
 
@@ -55,9 +82,12 @@
                 <a href="{{ route('contact.index') }}" class="btn btn-dark btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm">
                     <i class="fa-solid fa-calendar-check me-2"></i> ĐĂNG KÝ LÁI THỬ
                 </a>
-                <a href="{{ route('contact.index') }}" class="btn btn-outline-danger btn-lg px-4 py-3 rounded-pill fw-bold border-2">
-                    <i class="fa-solid fa-phone me-2"></i> TƯ VẤN NGAY
-                </a>
+                <form action="{{ route('cart.add', $product->id) }}" method="POST" class="m-0">
+                    @csrf
+                    <button type="submit" class="btn btn-outline-danger btn-lg px-4 py-3 rounded-pill fw-bold border-2 w-100">
+                        <i class="fa-solid fa-cart-plus me-2"></i> MUA HÀNG
+                    </button>
+                </form>
             </div>
 
             <div class="mt-4 p-3 bg-white border rounded-3 d-flex align-items-center">
@@ -70,4 +100,19 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const carouselEl = document.getElementById('productCarousel');
+    if(carouselEl) {
+        carouselEl.addEventListener('slid.bs.carousel', function (event) {
+            const thumbs = document.querySelectorAll('.thumbnail-nav');
+            thumbs.forEach(t => t.classList.remove('border-danger', 'border-2'));
+            if(thumbs[event.to]) {
+                thumbs[event.to].classList.add('border-danger', 'border-2');
+            }
+        });
+    }
+});
+</script>
 @endsection
