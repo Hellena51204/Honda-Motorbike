@@ -10,6 +10,11 @@ class OrderController extends Controller
 {
     public function index()
     {
+        if (Auth::user()->role === 'admin') {
+            $orders = Order::with(['user', 'items'])->orderBy('created_at', 'desc')->get();
+            return view('admin.orders.index', compact('orders'));
+        }
+
         // Get orders for currently logged in user
         $orders = Order::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')

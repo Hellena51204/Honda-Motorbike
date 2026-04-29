@@ -1,268 +1,216 @@
-{{-- ╔══════════════════════════════════════════════════════╗
-     ║                  ADMIN DASHBOARD                    ║
-     ╚══════════════════════════════════════════════════════╝ --}}
+@extends('layouts.admin')
 
-<div class="container">
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">Quản trị hệ thống</h2>
-            <p class="text-secondary mb-0 small">Chào mừng trở lại, {{ $user->name }}!</p>
-        </div>
-        <span class="badge bg-danger px-3 py-2 rounded-pill">
-            <i class="fa-solid fa-shield-halved me-1"></i> Admin
-        </span>
-    </div>
+@section('content')
+<style>
+.stat-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    border: 1px solid #f8fafc;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+}
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+}
+.stat-label {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+.stat-percent {
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+.stat-percent.positive { color: #16a34a; }
+.stat-percent.negative { color: #dc2626; }
+.sparkline {
+    width: 100%;
+    height: 30px;
+    margin-top: 1.5rem;
+}
+</style>
 
-    {{-- Stat Cards --}}
-    <div class="row g-4 mb-5">
-        <div class="col-md-4">
-            <div class="admin-stat-card" style="background: linear-gradient(135deg, #cc0000, #8b0000);">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="stat-icon">
-                        <div class="stat-label mb-2">Tổng sản phẩm</div>
-                        <div class="stat-number">{{ $totalProducts }}</div>
-                    </div>
-                    <i class="fa-solid fa-motorcycle fa-3x opacity-25"></i>
+<div class="mb-4">
+    <h2 class="fw-bold mb-1" style="font-size: 1.8rem; color: #0f172a;">Tổng quan Hệ thống</h2>
+    <p class="text-secondary mb-0" style="font-size: 0.95rem;">Theo dõi hiệu suất kinh doanh trực tuyến của Honda</p>
+</div>
+
+{{-- Stat Cards --}}
+<div class="row g-4 mb-5">
+    {{-- Total Revenue --}}
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-icon" style="background: #dcfce7; color: #166534;">
+                    <i class="fa-solid fa-dollar-sign"></i>
                 </div>
-                <div class="mt-3">
-                    <a href="{{ route('admin.products.index') }}" class="text-white text-decoration-none fw-bold small">
-                        Quản lý sản phẩm <i class="fa-solid fa-arrow-right ms-1"></i>
-                    </a>
+                <div class="stat-percent positive">
+                    <i class="fa-solid fa-arrow-trend-up me-1"></i>+12.5%
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="admin-stat-card" style="background: linear-gradient(135deg, #1f2937, #374151);">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="stat-icon">
-                        <div class="stat-label mb-2">Thư phản hồi</div>
-                        <div class="stat-number">{{ $totalContacts }}</div>
-                    </div>
-                    <i class="fa-solid fa-envelope fa-3x opacity-25"></i>
-                </div>
-                <div class="mt-3">
-                    <a href="#messages-sec" class="text-white text-decoration-none fw-bold small">
-                        Xem hộp thư <i class="fa-solid fa-arrow-down ms-1"></i>
-                    </a>
-                </div>
+            @php
+                $revMillions = $totalRevenue > 0 ? number_format($totalRevenue / 1000000, 1) . 'M' : '0';
+            @endphp
+            <div class="stat-value">{{ $revMillions }} VND</div>
+            <div class="stat-label">Tổng doanh thu</div>
+            <div class="sparkline">
+                <svg viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <path d="M0,25 C20,20 40,30 60,15 C80,0 100,10 100,10" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+                </svg>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="admin-stat-card" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div class="stat-icon">
-                        <div class="stat-label mb-2">Thành viên</div>
-                        <div class="stat-number">{{ $totalUsers }}</div>
-                    </div>
-                    <i class="fa-solid fa-users fa-3x opacity-25"></i>
-                </div>
-                <div class="mt-3">
-                    <a href="#members-sec" class="text-white text-decoration-none fw-bold small">
-                        Phân hạng thành viên <i class="fa-solid fa-arrow-down ms-1"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Quản lý thành viên --}}
-    <div class="mb-5" id="members-sec">
-        <div class="section-header">
-            <h5 class="section-title">Quản lý thành viên &amp; Membership</h5>
-        </div>
-        <div class="admin-table">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="padding-left:1.25rem;">Thành viên</th>
-                        <th>Liên hệ</th>
-                        <th>Điểm tích lũy</th>
-                        <th>Hạng hiện tại</th>
-                        <th class="text-end" style="padding-right:1.25rem;">Cập nhật hạng</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($members as $member)
-                    <tr>
-                        <td style="padding-left:1.25rem;">
-                            <div class="d-flex align-items-center gap-3">
-                                @if($member->avatar)
-                                    <img src="{{ asset('storage/' . $member->avatar) }}" class="rounded-circle" width="40" height="40" style="object-fit:cover; border: 2px solid #eee;">
-                                @else
-                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width:40px;height:40px;font-size:18px;color:#aaa;">
-                                        <i class="fa-regular fa-circle-user"></i>
-                                    </div>
-                                @endif
-                                <div>
-                                    <div class="fw-bold">{{ $member->name }}</div>
-                                    <div class="text-secondary small">Đăng ký: {{ $member->created_at->format('d/m/Y') }}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="small">{{ $member->email }}</div>
-                            @if($member->phone)
-                                <div class="small text-secondary">{{ $member->phone }}</div>
-                            @endif
-                        </td>
-                        <td>
-                            <span class="fw-bold text-dark">{{ number_format($member->membership_points) }}</span>
-                            <span class="text-secondary small"> điểm</span>
-                        </td>
-                        <td>
-                            @php
-                                $badgeMap = [
-                                    'none'    => ['label' => 'Chưa xếp hạng', 'icon' => '🔘', 'class' => 'badge-none'],
-                                    'silver'  => ['label' => 'Bạc',           'icon' => '🥈', 'class' => 'badge-silver'],
-                                    'gold'    => ['label' => 'Vàng',          'icon' => '🥇', 'class' => 'badge-gold'],
-                                    'diamond' => ['label' => 'Kim Cương',     'icon' => '💎', 'class' => 'badge-diamond'],
-                                ];
-                                $b = $badgeMap[$member->membership] ?? $badgeMap['none'];
-                            @endphp
-                            <span class="membership-badge {{ $b['class'] }}">
-                                {{ $b['icon'] }} {{ $b['label'] }}
-                            </span>
-                        </td>
-                        <td class="text-end" style="padding-right:1.25rem;">
-                            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#membershipModal{{ $member->id }}">
-                                <i class="fa-solid fa-pen-to-square me-1"></i> Chỉnh hạng
-                            </button>
-
-                            {{-- Modal --}}
-                            <div class="modal fade" id="membershipModal{{ $member->id }}" tabindex="-1">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content border-0 shadow-lg rounded-4">
-                                        <div class="modal-header border-0 pb-0 px-4 pt-4">
-                                            <h5 class="modal-title fw-bold">Phân hạng: {{ $member->name }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <form action="{{ route('admin.users.membership', $member->id) }}" method="POST">
-                                            @csrf @method('PATCH')
-                                            <div class="modal-body px-4 py-3 text-start">
-                                                <div class="mb-3">
-                                                    <label class="form-label fw-semibold small text-uppercase text-secondary">Hạng thành viên</label>
-                                                    <select class="form-select rounded-3" name="membership">
-                                                        <option value="none"    {{ $member->membership === 'none'    ? 'selected' : '' }}>🔘 Chưa xếp hạng</option>
-                                                        <option value="silver"  {{ $member->membership === 'silver'  ? 'selected' : '' }}>🥈 Bạc</option>
-                                                        <option value="gold"    {{ $member->membership === 'gold'    ? 'selected' : '' }}>🥇 Vàng</option>
-                                                        <option value="diamond" {{ $member->membership === 'diamond' ? 'selected' : '' }}>💎 Kim Cương</option>
-                                                    </select>
-                                                </div>
-                                                <div class="mb-1">
-                                                    <label class="form-label fw-semibold small text-uppercase text-secondary">Điểm tích lũy</label>
-                                                    <input type="number" class="form-control rounded-3" name="membership_points"
-                                                           value="{{ $member->membership_points }}" min="0">
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer border-0 px-4 pb-4">
-                                                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
-                                                <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
-                                                    <i class="fa-solid fa-check me-1"></i> Lưu
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center py-5 text-secondary">
-                            <i class="fa-regular fa-users fa-3x mb-3 d-block text-muted"></i>
-                            Chưa có thành viên nào.
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
         </div>
     </div>
 
-    {{-- Hộp thư phản hồi --}}
-    <div id="messages-sec">
-        <div class="section-header">
-            <h5 class="section-title">Hộp thư phản hồi từ khách hàng</h5>
+    {{-- Units Sold --}}
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <div class="stat-percent positive">
+                    <i class="fa-solid fa-arrow-trend-up me-1"></i>+8.2%
+                </div>
+            </div>
+            <div class="stat-value">{{ $totalOrders }}</div>
+            <div class="stat-label">Số xe đã bán</div>
+            <div class="sparkline">
+                <svg viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <path d="M0,20 C30,25 50,5 70,15 C90,25 100,10 100,10" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
         </div>
-        <div class="admin-table">
-            <table class="table table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="padding-left:1.25rem;">Ngày gửi</th>
-                        <th>Thông tin khách</th>
-                        <th>Tiêu đề - Nội dung</th>
-                        <th class="text-end" style="padding-right:1.25rem;">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($contacts as $contact)
-                    <tr>
-                        <td class="text-nowrap text-secondary small" style="padding-left:1.25rem;">
-                            {{ $contact->created_at->format('d/m/Y H:i') }}
-                        </td>
-                        <td>
-                            <div class="fw-bold">{{ $contact->name }}</div>
-                            <div class="text-secondary small">{{ $contact->email }}</div>
-                        </td>
-                        <td style="max-width: 300px;">
-                            <div class="fw-bold text-truncate">{{ $contact->subject }}</div>
-                            <p class="mb-0 text-secondary small text-truncate" title="{{ $contact->message }}">{{ $contact->message }}</p>
-                        </td>
-                        <td class="text-end text-nowrap" style="padding-right:1.25rem;">
-                            <button class="btn btn-sm btn-outline-secondary me-1 rounded-pill" data-bs-toggle="modal" data-bs-target="#contactModal{{ $contact->id }}">
-                                <i class="fa-regular fa-eye"></i> Xem
-                            </button>
-                            <a href="mailto:{{ $contact->email }}?subject=RE: {{ $contact->subject }}" class="btn btn-sm btn-outline-primary me-1 rounded-pill">
-                                <i class="fa-solid fa-reply"></i>
-                            </a>
-                            <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa thư này?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
+    </div>
 
-                            {{-- Modal Chi tiết --}}
-                            <div class="modal fade text-start" id="contactModal{{ $contact->id }}" tabindex="-1">
-                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                                    <div class="modal-content border-0 shadow-lg rounded-4">
-                                        <div class="modal-header border-0 px-4 pt-4 pb-2">
-                                            <h5 class="modal-title fw-bold">Chi tiết liên hệ</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body px-4">
-                                            <h6 class="fw-bold mb-3">Thông tin người gửi:</h6>
-                                            <ul class="list-unstyled mb-4 text-secondary">
-                                                <li class="mb-2"><i class="fa-regular fa-user me-2"></i><strong class="text-dark">{{ $contact->name }}</strong></li>
-                                                <li class="mb-2"><i class="fa-regular fa-envelope me-2"></i><a href="mailto:{{ $contact->email }}" class="text-decoration-none">{{ $contact->email }}</a></li>
-                                                <li><i class="fa-regular fa-clock me-2"></i>{{ $contact->created_at->format('d/m/Y H:i') }}</li>
-                                            </ul>
-                                            <h6 class="fw-bold mb-2">Chủ đề: <span class="text-danger">{{ $contact->subject }}</span></h6>
-                                            <div class="p-3 bg-light rounded-3 mt-3 border" style="white-space: pre-wrap; word-break: break-word; color: #444;">{{ $contact->message }}</div>
-                                        </div>
-                                        <div class="modal-footer border-0 px-4 pb-4">
-                                            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
-                                            <a href="mailto:{{ $contact->email }}?subject=RE: {{ $contact->subject }}" class="btn btn-primary rounded-pill px-4">
-                                                <i class="fa-solid fa-reply"></i> Trả lời ngay
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="text-center py-5 text-secondary">
-                            <i class="fa-regular fa-envelope-open fa-3x mb-3 d-block text-muted"></i>
-                            Chưa có thư liên hệ nào!
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+    {{-- New Customers --}}
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-icon" style="background: #f3e8ff; color: #7e22ce;">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="stat-percent positive">
+                    <i class="fa-solid fa-arrow-trend-up me-1"></i>+15.3%
+                </div>
+            </div>
+            <div class="stat-value">{{ $totalUsers }}</div>
+            <div class="stat-label">Khách hàng mới</div>
+            <div class="sparkline">
+                <svg viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <path d="M0,30 C20,20 40,25 60,10 C80,15 100,5 100,5" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    {{-- Pending Orders --}}
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div class="stat-icon" style="background: #ffedd5; color: #c2410c;">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div class="stat-percent negative">
+                    <i class="fa-solid fa-arrow-trend-down me-1"></i>-5.1%
+                </div>
+            </div>
+            <div class="stat-value">{{ $pendingOrders }}</div>
+            <div class="stat-label">Đơn chờ xử lý</div>
+            <div class="sparkline">
+                <svg viewBox="0 0 100 30" preserveAspectRatio="none">
+                    <path d="M0,5 C30,10 50,25 70,15 C90,20 100,25 100,25" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
         </div>
     </div>
 </div>
+
+{{-- Recent Orders Table --}}
+<div class="admin-table bg-white p-4" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <div class="mb-4">
+        <h4 class="fw-bold mb-1" style="color: #0f172a;">Đơn hàng gần đây</h4>
+    </div>
+
+    <table class="table table-hover align-middle mb-0" style="border-top: 1px solid #e2e8f0;">
+        <thead>
+            <tr>
+                <th style="padding-left:1.5rem; font-size: 0.85rem; font-weight: 600; color: #475569;">Mã ĐH</th>
+                <th style="font-size: 0.85rem; font-weight: 600; color: #475569;">Khách hàng</th>
+                <th style="font-size: 0.85rem; font-weight: 600; color: #475569;">Sản phẩm</th>
+                <th style="font-size: 0.85rem; font-weight: 600; color: #475569;">Ngày đặt</th>
+                <th style="font-size: 0.85rem; font-weight: 600; color: #475569;">Trạng thái</th>
+                <th class="text-end" style="padding-right:1.5rem; font-size: 0.85rem; font-weight: 600; color: #475569;">Tổng tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($recentOrders as $order)
+            <tr>
+                <td class="fw-bold" style="padding-left:1.5rem; font-size: 0.9rem; color: #1e293b;">
+                    ORD-{{ str_pad($order->id, 3, '0', STR_PAD_LEFT) }}
+                </td>
+                <td>
+                    <div class="text-dark" style="font-size: 0.9rem;">{{ $order->user ? $order->user->name : 'Khách vãng lai' }}</div>
+                </td>
+                <td>
+                    <div class="text-secondary" style="font-size: 0.9rem;">
+                        @if($order->items->count() > 0)
+                            {{ $order->items->first()->product_name }}
+                        @else
+                            <span class="text-muted fst-italic">Không có SP</span>
+                        @endif
+                    </div>
+                </td>
+                <td>
+                    <div class="text-secondary" style="font-size: 0.9rem;">{{ $order->created_at->format('Y-m-d') }}</div>
+                </td>
+                <td>
+                    @if($order->payment_status == 'completed')
+                        <span style="background-color: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-regular fa-circle-check"></i> Thành công
+                        </span>
+                    @elseif($order->payment_status == 'failed')
+                        <span style="background-color: #fee2e2; color: #991b1b; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-regular fa-circle-xmark"></i> Thất bại
+                        </span>
+                    @else
+                        <span style="background-color: #fef9c3; color: #854d0e; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-regular fa-clock"></i> Đang chờ
+                        </span>
+                    @endif
+                </td>
+                <td class="text-end" style="padding-right:1.5rem;">
+                    @php
+                        $ordMillions = $order->total_amount > 1000000 ? number_format($order->total_amount / 1000000, 1) . 'M' : number_format($order->total_amount);
+                    @endphp
+                    <div class="fw-bold text-dark" style="font-size: 0.9rem;">{{ $ordMillions }} VND</div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="6" class="text-center py-5 text-secondary">
+                    <i class="fa-solid fa-clipboard-list fa-3x mb-3 d-block text-muted"></i>
+                    Chưa có đơn hàng nào.
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+@endsection

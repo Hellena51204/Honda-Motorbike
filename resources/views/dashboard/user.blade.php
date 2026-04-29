@@ -2,6 +2,21 @@
      ║                  USER DASHBOARD                     ║
      ╚══════════════════════════════════════════════════════╝ --}}
 
+@extends('layouts.app')
+
+@section('content')
+<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+<div class="dashboard-page">
+
+@if(session('success'))
+    <div class="container">
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    </div>
+@endif
+
 {{-- Hero Header --}}
 <div class="user-hero">
     <div class="container user-hero-content">
@@ -280,3 +295,6 @@
     });
 </script>
 @endif
+
+</div>{{-- /.dashboard-page --}}
+@endsection

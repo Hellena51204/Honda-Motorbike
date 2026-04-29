@@ -18,19 +18,23 @@ class DashboardController extends Controller
 
         if ($user->role === 'admin') {
             $totalProducts = Product::count();
-            $totalContacts = Contact::count();
             $totalUsers    = User::where('role', '!=', 'admin')->count();
-            $contacts      = Contact::latest()->get();
-            $members       = User::where('role', '!=', 'admin')->orderBy('name')->get();
+            $totalOrders   = \App\Models\Order::count();
+            
+            // For new dashboard stats
+            $totalRevenue = \App\Models\Order::where('payment_status', 'completed')->sum('total_amount');
+            $pendingOrders = \App\Models\Order::where('payment_status', 'pending')->count();
+            $recentOrders = \App\Models\Order::with(['user', 'items'])->orderBy('created_at', 'desc')->take(5)->get();
 
-            return view('dashboard', compact(
-                'totalProducts', 'totalContacts', 'totalUsers',
-                'contacts', 'members', 'user'
+            // Admin dùng layout riêng có sidebar (layouts.admin)
+            return view('dashboard.admin', compact(
+                'totalProducts', 'totalUsers', 'totalOrders', 'user',
+                'totalRevenue', 'pendingOrders', 'recentOrders'
             ));
         }
 
-        // Dành cho user thường
-        return view('dashboard', compact('user'));
+        // User thường dùng layout app.blade.php
+        return view('dashboard.user', compact('user'));
     }
 
     /**
