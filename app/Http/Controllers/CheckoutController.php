@@ -13,7 +13,7 @@ class CheckoutController extends Controller
     {
         $cart = session()->get('cart', []);
         $total = 0;
-        foreach($cart as $item) {
+        foreach ($cart as $item) {
             $total += $item['price'] * $item['quantity'];
         }
 
@@ -27,16 +27,17 @@ class CheckoutController extends Controller
         $partnerCode = env('MOMO_PARTNER_CODE', 'MOMO');
         $accessKey = env('MOMO_ACCESS_KEY', 'F8BBA842ECF85');
         $secretKey = env('MOMO_SECRET_KEY', 'K951B6PE1waDMi640xX08PD3vg6EkVlz');
-        
+
         $orderInfo = "Thanh toán đơn hàng mua xe qua Momo";
-        $amount = (string)$total;
+        $amount = "50000";
+        //-$amount = (string)$total
         $orderId = time() . "";
         $redirectUrl = route('checkout.momo.return');
         $ipnUrl = route('checkout.momo.return');
         $extraData = "";
 
         $requestId = time() . "";
-        $requestType = "payWithATM"; // Hoặc captureWallet
+        $requestType = "payWithATM"; // Hoặc captureWallet / payWithATM payWithCC
 
         // Lưu Order vào database với trạng thái pending
         $order = Order::create([
@@ -47,7 +48,7 @@ class CheckoutController extends Controller
             'momo_order_id' => $orderId
         ]);
 
-        foreach($cart as $id => $item) {
+        foreach ($cart as $id => $item) {
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => is_numeric($id) ? $id : null,
@@ -58,7 +59,7 @@ class CheckoutController extends Controller
         }
 
         $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
-        
+
         $signature = hash_hmac("sha256", $rawHash, $secretKey);
 
         $data = array(
@@ -89,19 +90,29 @@ class CheckoutController extends Controller
 
     public function momoReturn(Request $request)
     {
-        $order = Order::where('momo_order_id', $request->orderId)->first();
+        $order = Order::with('items')->where('momo_order_id', $request->orderId)->first();
 
         if ($request->resultCode == 0) {
-            if ($order) {
+            if ($order && $order->payment_status != 'completed') {
                 $order->update([
                     'payment_status' => 'completed',
                     'momo_trans_id' => $request->transId ?? null
                 ]);
+
+                // Trừ tồn kho sản phẩm và cộng số lượng đã bán
+                foreach ($order->items as $item) {
+                    $product = \App\Models\Product::find($item->product_id);
+                    if ($product) {
+                        $product->stock = max(0, $product->stock - $item->quantity);
+                        $product->sold += $item->quantity;
+                        $product->save();
+                    }
+                }
             }
             session()->forget('cart'); // Xóa giỏ hàng sau khi thanh toán thành công
             return redirect()->route('home')->with('success', 'Thanh toán đơn hàng thành công qua Momo!');
         } else {
-            if ($order) {
+            if ($order && $order->payment_status != 'completed') {
                 $order->update([
                     'payment_status' => 'failed'
                 ]);
@@ -116,9 +127,13 @@ class CheckoutController extends Controller
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        curl_setopt(
+            $ch,
+            CURLOPT_HTTPHEADER,
+            array(
                 'Content-Type: application/json',
-                'Content-Length: ' . strlen($data))
+                'Content-Length: ' . strlen($data)
+            )
         );
         curl_setopt($ch, CURLOPT_TIMEOUT, 5);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);

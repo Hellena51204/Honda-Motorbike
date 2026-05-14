@@ -58,9 +58,8 @@
                     </td>
                     <td>
                         @php
-                            // Mocking stock and sold for visual representation
-                            $stock = ($product->id * 7) % 50 + 2; 
-                            $sold = ($product->id * 11) % 100 + 10;
+                            $stock = $product->stock; 
+                            $sold = $product->sold;
                             
                             $stockBg = '#dcfce7'; $stockText = '#166534';
                             if($stock < 10) { $stockBg = '#fee2e2'; $stockText = '#991b1b'; }

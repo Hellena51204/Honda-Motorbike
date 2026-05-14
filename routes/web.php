@@ -26,8 +26,8 @@ Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 // Thanh toán Momo
-Route::post('/checkout/momo', [CheckoutController::class, 'momoPayment'])->name('checkout.momo');
-Route::get('/checkout/momo/return', [CheckoutController::class, 'momoReturn'])->name('checkout.momo.return');
+Route::post('/checkout/momo', [CheckoutController::class, 'momoPayment'])->name('checkout.momo')->middleware('auth');
+Route::get('/checkout/momo/return', [CheckoutController::class, 'momoReturn'])->name('checkout.momo.return')->middleware('auth');
 
 // Dashboard (cho cả admin và user)
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');

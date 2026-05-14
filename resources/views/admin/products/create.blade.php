@@ -51,11 +51,15 @@
                             <i class="fa-solid fa-plus"></i> Thêm đường dẫn ảnh nữa
                         </button>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">Giá bán (VNĐ)</label>
                         <input type="number" name="price" class="form-control" value="{{ old('price') }}" required>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Tồn kho</label>
+                        <input type="number" name="stock" class="form-control" value="{{ old('stock') ?? 0 }}" required min="0">
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label fw-bold">Năm ra mắt</label>
                         <input type="text" name="year" class="form-control" value="{{ old('year') ?? '2024' }}">
                     </div>

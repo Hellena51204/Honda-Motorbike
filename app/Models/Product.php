@@ -11,7 +11,7 @@ class Product extends Model
 
     // Cho phép thêm dữ liệu vào các cột này
     protected $fillable = [
-        'name', 'category', 'image', 'images', 'description', 'price', 'year', 'colors'
+        'name', 'category', 'image', 'images', 'description', 'price', 'year', 'colors', 'stock', 'sold'
     ];
 
     // Tự động chuyển đổi cột colors từ JSON (trong DB) sang mảng (trong PHP)

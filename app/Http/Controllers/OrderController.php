@@ -27,8 +27,11 @@ class OrderController extends Controller
     // Hiển thị chi tiết của một đơn hàng cụ thể
     public function show($id)
     {
-        // Tìm đơn hàng theo ID và đảm bảo đơn hàng đó thuộc về người dùng đang đăng nhập
-        $order = Order::with('items')->where('user_id', Auth::id())->findOrFail($id);
+        if (Auth::user() && Auth::user()->role === 'admin') {
+            $order = Order::with('items')->findOrFail($id);
+        } else {
+            $order = Order::with('items')->where('user_id', Auth::id())->findOrFail($id);
+        }
         
         return view('orders.show', compact('order'));
     }

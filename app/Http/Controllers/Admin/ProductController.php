@@ -29,6 +29,7 @@ class ProductController extends Controller
             'images.*' => 'nullable|url',
             'description' => 'required|string',
             'price' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
             'year' => 'nullable|string',
             'colors' => 'nullable|string',
         ]);
@@ -69,6 +70,7 @@ class ProductController extends Controller
             'images.*' => 'nullable|url',
             'description' => 'required|string',
             'price' => 'required|numeric',
+            'stock' => 'required|integer|min:0',
             'year' => 'nullable|string',
             'colors' => 'nullable|string',
         ]);

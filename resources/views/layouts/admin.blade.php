@@ -391,12 +391,9 @@
                     </a></li>
                     <li><hr class="dropdown-divider my-1"></li>
                     <li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="dropdown-item text-danger py-2" type="submit">
-                                <i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất
-                            </button>
-                        </form>
+                        <a class="dropdown-item text-danger py-2" href="{{ route('logout') }}">
+                            <i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất
+                        </a>
                     </li>
                 </ul>
             </div>

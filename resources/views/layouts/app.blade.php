@@ -66,7 +66,6 @@
         }
     </style>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-3">
@@ -129,10 +128,9 @@
                                 <hr class="dropdown-divider my-1">
                             </li>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button class="dropdown-item text-danger py-2" type="submit"><i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất</button>
-                                </form>
+                                <a class="dropdown-item text-danger py-2" href="{{ route('logout') }}">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -180,10 +178,9 @@
                                 <hr class="dropdown-divider my-1">
                             </li>
                             <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button class="dropdown-item text-danger py-2" type="submit"><i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất</button>
-                                </form>
+                                <a class="dropdown-item text-danger py-2" href="{{ route('logout') }}">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i>Đăng xuất
+                                </a>
                             </li>
                         </ul>
                     </div>
