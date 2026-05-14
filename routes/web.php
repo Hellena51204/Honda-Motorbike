@@ -78,3 +78,5 @@ Route::middleware(['auth', 'can:admin'])->prefix('admin')->group(function () {
     // Admin gửi tin nhắn trả lời
     Route::post('/chat/reply/{id}', [App\Http\Controllers\ChatController::class, 'adminReply'])->name('admin.chat.reply');
 });
+Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{id}', [App\Http\Controllers\BlogController::class, 'show'])->name('blog.show');

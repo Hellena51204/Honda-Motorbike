@@ -44,48 +44,74 @@
     </div>
 </div>
 
-<div class="container py-5 my-4">
+<div class="container py-5">
     <div class="text-center mb-5">
-        <h2 class="fw-bold">Sản phẩm nổi bật</h2>
-        <p class="text-secondary">Khám phá các dòng xe máy bán chạy nhất của chúng tôi</p>
+        <h2 class="fw-bold text-uppercase">Sản phẩm <span class="text-honda-red">Nổi bật</span></h2>
+        <div class="honda-red mx-auto" style="width: 60px; height: 3px;"></div>
     </div>
 
     <div class="row g-4">
+        @foreach($featuredProducts as $product)
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
+            <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden product-card">
                 <div class="position-relative bg-white text-center p-3">
-                    <span class="badge honda-red position-absolute top-0 end-0 m-3">2026</span>
-                    <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=500&auto=format&fit=crop" class="img-fluid rounded" alt="Vision" style="height: 180px; object-fit: cover;">
+                    <span class="badge honda-red position-absolute top-0 end-0 m-3">{{ $product->year }}</span>
+                    <img src="{{ $product->image }}" class="img-fluid" alt="{{ $product->name }}" style="height: 180px; object-fit: contain;">
                 </div>
-                <div class="card-body bg-light">
-                    <h5 class="fw-bold mb-1">Honda Vision</h5>
-                    <p class="text-muted small mb-3">Xe tay ga</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="text-honda-red fw-bold mb-0">29.9M VND</h5>
-                        <a href="#" class="text-secondary"><i class="fa-solid fa-arrow-right"></i></a>
+                <div class="card-body bg-white">
+                    <h5 class="fw-bold mb-1">{{ $product->name }}</h5>
+                    <p class="text-muted small">{{ $product->category }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <h5 class="text-honda-red fw-bold mb-0">{{ number_format($product->price, 0, ',', '.') }} VNĐ</h5>
+                        <a href="{{ route('products.show', $product->id) }}" class="btn btn-outline-danger btn-sm rounded-circle">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
-                <div class="position-relative bg-white text-center p-3">
-                    <span class="badge honda-red position-absolute top-0 end-0 m-3">2026</span>
-                    <img src="https://images.unsplash.com/photo-1622185135505-2d795003994a?w=500&auto=format&fit=crop" class="img-fluid rounded" alt="SH" style="height: 180px; object-fit: cover;">
-                </div>
-                <div class="card-body bg-light">
-                    <h5 class="fw-bold mb-1">Honda SH</h5>
-                    <p class="text-muted small mb-3">Xe tay ga cao cấp</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="text-honda-red fw-bold mb-0">95.9M VND</h5>
-                        <a href="#" class="text-secondary"><i class="fa-solid fa-arrow-right"></i></a>
+        @endforeach
+    </div>
+</div>
+
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-5">
+            <div>
+                <h2 class="fw-bold text-uppercase">Tin tức <span class="text-honda-red">Honda</span></h2>
+                <p class="text-secondary mb-0">Cập nhật những công nghệ và sự kiện mới nhất</p>
+            </div>
+            <a href="{{ route('blog.index') }}" class="btn btn-link text-honda-red fw-bold text-decoration-none">Xem tất cả <i class="fa-solid fa-chevron-right ms-1"></i></a>
+        </div>
+
+        <div class="row g-4">
+            @foreach($featuredPosts as $post)
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+                    <div class="overflow-hidden" style="height: 220px;">
+                        <img src="{{ $post->image }}" class="card-img-top hover-zoom" alt="{{ $post->title }}" style="object-fit: cover; height: 100%;">
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="text-honda-red small fw-bold mb-2 text-uppercase">Tin tức nổi bật</div>
+                        <h5 class="fw-bold mb-3 line-clamp-2">{{ $post->title }}</h5>
+                        <p class="text-secondary small mb-4 line-clamp-3">{{ $post->summary }}</p>
+                        <a href="{{ route('blog.show', $post->id) }}" class="stretched-link text-dark fw-bold text-decoration-none">Đọc thêm</a>
                     </div>
                 </div>
             </div>
+            @endforeach
         </div>
     </div>
 </div>
 
+<style>
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .hover-zoom { transition: transform 0.5s ease; }
+    .card:hover .hover-zoom { transform: scale(1.1); }
+    .product-card { transition: all 0.3s ease; }
+    .product-card:hover { transform: translateY(-10px); }
+</style>
 <div class="container py-5 mb-5">
     <div class="text-center mb-5">
         <h2 class="fw-bold">Vì sao chọn Honda?</h2>

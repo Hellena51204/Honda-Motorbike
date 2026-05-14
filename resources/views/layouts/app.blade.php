@@ -10,8 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <style>
         .honda-red {
             background-color: #cc0000 !important;
@@ -67,7 +66,7 @@
         }
     </style>
 </head>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-3">
@@ -87,6 +86,7 @@
                     <li class="nav-item"><a class="nav-link px-3 {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Trang chủ</a></li>
                     <li class="nav-item"><a class="nav-link px-3 {{ request()->routeIs('products*') ? 'active' : '' }}" href="{{ route('products.index') }}">Sản phẩm</a></li>
                     <li class="nav-item"><a class="nav-link px-3 {{ request()->routeIs('contact*') ? 'active' : '' }}" href="{{ route('contact.index') }}">Liên hệ</a></li>
+                    <li class="nav-item"><a class="nav-link px-3 {{ request()->routeIs('blog*') ? 'active' : '' }}" href="{{ route('blog.index') }}">Blog</a></li>
                     @auth
                     @if(Auth::user()->role === 'admin')
                     {{-- Admin chỉ thấy "Quản trị" --}}
@@ -212,17 +212,17 @@
                 <div class="col-md-3">
                     <h6 class="fw-bold mb-4 text-uppercase">Quick Links</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">All Products</a></li>
-                        <li class="mb-2"><a href="#">Contact Us</a></li>
-                        <li class="mb-2"><a href="#">About Honda</a></li>
+                        <li class="mb-2"><a href="{{ route('products.index') }}">All Products</a></li>
+                        <li class="mb-2"><a href="{{ route('contact.index') }}">Contact Us</a></li>
+                        <li class="mb-2"><a href="{{ route('blog.index') }}">Blog</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h6 class="fw-bold mb-4 text-uppercase">Customer Service</h6>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><a href="#">FAQ</a></li>
-                        <li class="mb-2"><a href="#">Test Ride</a></li>
-                        <li class="mb-2"><a href="#">Owner's Manual</a></li>
+                        <li class="mb-2"><a href="{{ route('contact.index') }}">FAQ</a></li>
+                        <li class="mb-2"><a href="{{ route('contact.index') }}">Test Ride</a></li>
+                        <li class="mb-2"><a href="{{ route('contact.index') }}">Owner's Manual</a></li>
                     </ul>
                 </div>
                 <div class="col-md-3">
