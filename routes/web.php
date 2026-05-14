@@ -9,11 +9,14 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
+// Các trang thông tin cơ bản cho Khách hàng
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Quản lý Sản phẩm (Hiển thị danh sách và chi tiết)
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
+// Liên hệ và Gửi tin nhắn cho cửa hàng
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
@@ -30,6 +33,7 @@ Route::get('/checkout/momo/return', [CheckoutController::class, 'momoReturn'])->
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // Cập nhật thông tin cá nhân (user)
+// Các tính năng yêu cầu người dùng phải đăng nhập mới được sử dụng
 Route::middleware('auth')->group(function () {
     Route::patch('/dashboard/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.profile.update');
     Route::post('/dashboard/avatar', [DashboardController::class, 'updateAvatar'])->name('dashboard.avatar.update');
@@ -49,6 +53,7 @@ Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group
     Route::patch('users/{user}/membership', [\App\Http\Controllers\Admin\UserController::class, 'updateMembership'])->name('users.membership');
 });
 
+// Quản lý thông tin tài khoản và Đơn hàng của người dùng hiện tại
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -59,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
 });
 
+// Load các route liên quan đến xác thực (Đăng nhập, Đăng ký, Quên mật khẩu...) từ file auth.php
 require __DIR__ . '/auth.php';
 
 Route::post('/chat/send', [App\Http\Controllers\ChatController::class, 'store']);

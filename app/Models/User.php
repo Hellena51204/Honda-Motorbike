@@ -15,6 +15,7 @@ class User extends Authenticatable
 
     /**
      * The attributes that are mass assignable.
+     * Các trường thông tin (cột) trong bảng Users được phép thêm/sửa hàng loạt bằng phương thức create() hoặc update()
      *
      * @var list<string>
      */
@@ -31,6 +32,7 @@ class User extends Authenticatable
 
     /**
      * The attributes that should be hidden for serialization.
+     * Các trường bảo mật sẽ bị ẩn đi khi chuyển dữ liệu Model thành mảng hoặc JSON (tránh rò rỉ thông tin)
      *
      * @var list<string>
      */
@@ -52,6 +54,10 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Mối quan hệ với bảng Orders (Đơn hàng):
+     * Một User (Người dùng) có thể có nhiều Order (Đơn hàng)
+     */
     public function orders()
     {
         return $this->hasMany(\App\Models\Order::class);
