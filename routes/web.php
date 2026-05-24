@@ -9,37 +9,36 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
-// Các trang thông tin cơ bản cho Khách hàng
+// Nhóm định tuyến các trang thông tin cơ bản
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Quản lý Sản phẩm (Hiển thị danh sách và chi tiết)
+// Nhóm định tuyến hiển thị danh mục và chi tiết sản phẩm
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
 
-// Liên hệ và Gửi tin nhắn cho cửa hàng
+// Định tuyến chức năng liên hệ và phản hồi
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-// Giỏ hàng (Cart)
+// Định tuyến các thao tác xử lý giỏ hàng
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
 Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
-// Thanh toán Momo
+// Nhóm định tuyến tích hợp thanh toán qua ví MoMo
 Route::post('/checkout/momo', [CheckoutController::class, 'momoPayment'])->name('checkout.momo')->middleware('auth');
 Route::get('/checkout/momo/return', [CheckoutController::class, 'momoReturn'])->name('checkout.momo.return')->middleware('auth');
 
-// Dashboard (cho cả admin và user)
+// Định tuyến giao diện Dashboard chung (yêu cầu xác thực)
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
-// Cập nhật thông tin cá nhân (user)
-// Các tính năng yêu cầu người dùng phải đăng nhập mới được sử dụng
+// Nhóm định tuyến cập nhật thông tin hồ sơ người dùng (yêu cầu xác thực)
 Route::middleware('auth')->group(function () {
     Route::patch('/dashboard/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.profile.update');
     Route::post('/dashboard/avatar', [DashboardController::class, 'updateAvatar'])->name('dashboard.avatar.update');
 });
 
-// Phần quản trị Admin
+// Nhóm định tuyến dành riêng cho quyền quản trị viên (Admin)
 Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -48,34 +47,34 @@ Route::middleware(['auth', 'can:admin'])->prefix('admin')->name('admin.')->group
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::delete('contacts/{contact}', [\App\Http\Controllers\Admin\ContactMessageController::class, 'destroy'])->name('contacts.destroy');
 
-    // Quản lý thành viên
+    // Định tuyến chức năng quản lý người dùng
     Route::get('users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
     Route::patch('users/{user}/membership', [\App\Http\Controllers\Admin\UserController::class, 'updateMembership'])->name('users.membership');
 });
 
-// Quản lý thông tin tài khoản và Đơn hàng của người dùng hiện tại
+// Nhóm định tuyến quản lý tài khoản và theo dõi đơn hàng cá nhân
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
-    // Lịch sử mua hàng
+    // Định tuyến lịch sử giao dịch
     Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{id}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
 });
 
-// Load các route liên quan đến xác thực (Đăng nhập, Đăng ký, Quên mật khẩu...) từ file auth.php
+// Import các định tuyến xác thực từ tệp cấu hình auth.php
 require __DIR__ . '/auth.php';
 
 Route::post('/chat/send', [App\Http\Controllers\ChatController::class, 'store']);
 
 
 Route::middleware(['auth', 'can:admin'])->prefix('admin')->group(function () {
-    // Trang danh sách các cuộc trò chuyện
+    // Giao diện danh sách phiên hỗ trợ trực tuyến
     Route::get('/chat', [App\Http\Controllers\ChatController::class, 'adminIndex'])->name('admin.chat.index');
-    // Lấy nội dung chat của một khách cụ thể
+    // Hiển thị lịch sử trò chuyện của người dùng cụ thể
     Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'adminShow'])->name('admin.chat.show');
-    // Admin gửi tin nhắn trả lời
+    // Xử lý logic gửi tin nhắn phản hồi từ quản trị viên
     Route::post('/chat/reply/{id}', [App\Http\Controllers\ChatController::class, 'adminReply'])->name('admin.chat.reply');
 });
 Route::get('/blog', [App\Http\Controllers\BlogController::class, 'index'])->name('blog.index');

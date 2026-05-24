@@ -141,6 +141,28 @@
     </div>
 </div>
 
+{{-- Charts Section --}}
+<div class="row g-4 mb-5">
+    {{-- Revenue Chart --}}
+    <div class="col-12 col-xl-8">
+        <div class="admin-table bg-white p-4 h-100" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            <h5 class="fw-bold mb-4" style="color: #0f172a;">Biểu đồ Doanh thu (6 Tháng gần nhất)</h5>
+            <div style="height: 300px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+    {{-- Category Chart --}}
+    <div class="col-12 col-xl-4">
+        <div class="admin-table bg-white p-4 h-100" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            <h5 class="fw-bold mb-4" style="color: #0f172a;">Tỷ lệ Sản phẩm theo Danh mục</h5>
+            <div style="height: 300px; display: flex; justify-content: center;">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{-- Recent Orders Table --}}
 <div class="admin-table bg-white p-4" style="border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
     <div class="mb-4">
@@ -212,5 +234,75 @@
         </tbody>
     </table>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Biểu đồ Doanh thu (Bar Chart)
+    const revCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revCtx, {
+        type: 'bar',
+        data: {
+            labels: {!! json_encode($revenueLabels) !!},
+            datasets: [{
+                label: 'Doanh thu (VNĐ)',
+                data: {!! json_encode($revenueData) !!},
+                backgroundColor: '#cc0000',
+                borderRadius: 6,
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            if (value >= 1000000) {
+                                return (value / 1000000) + 'M';
+                            }
+                            return value;
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // Biểu đồ Danh mục (Doughnut Chart)
+    const catCtx = document.getElementById('categoryChart').getContext('2d');
+    new Chart(catCtx, {
+        type: 'doughnut',
+        data: {
+            labels: {!! json_encode($categoryLabels) !!},
+            datasets: [{
+                data: {!! json_encode($categoryData) !!},
+                backgroundColor: ['#cc0000', '#1f2937', '#e5e7eb', '#ef4444', '#f87171'],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        usePointStyle: true,
+                        font: { size: 12 }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 
 @endsection

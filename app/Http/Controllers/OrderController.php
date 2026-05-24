@@ -10,13 +10,13 @@ class OrderController extends Controller
 {
     public function index()
     {
-        // Kiểm tra nếu người dùng đang đăng nhập là 'admin', lấy toàn bộ đơn hàng trong hệ thống
+        // Kiểm tra quyền admin để truy xuất toàn bộ đơn hàng
         if (Auth::user()->role === 'admin') {
             $orders = Order::with(['user', 'items'])->orderBy('created_at', 'desc')->get();
             return view('admin.orders.index', compact('orders'));
         }
 
-        // Nếu là người dùng bình thường, chỉ lấy danh sách các đơn hàng của chính người dùng đó
+        // Khách hàng thông thường chỉ xem được danh sách đơn của cá nhân
         $orders = Order::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -24,7 +24,7 @@ class OrderController extends Controller
         return view('orders.index', compact('orders'));
     }
 
-    // Hiển thị chi tiết của một đơn hàng cụ thể
+    // Lấy thông tin chi tiết của đơn hàng
     public function show($id)
     {
         if (Auth::user() && Auth::user()->role === 'admin') {

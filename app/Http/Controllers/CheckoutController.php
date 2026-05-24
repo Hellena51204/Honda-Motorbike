@@ -23,23 +23,23 @@ class CheckoutController extends Controller
 
         $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
 
-        // Thay bằng credentials thật khi chạy thực tế
+        // Cấu hình thông tin xác thực, lưu ý thay đổi khi triển khai thực tế
         $partnerCode = env('MOMO_PARTNER_CODE', 'MOMO');
         $accessKey = env('MOMO_ACCESS_KEY', 'F8BBA842ECF85');
         $secretKey = env('MOMO_SECRET_KEY', 'K951B6PE1waDMi640xX08PD3vg6EkVlz');
 
         $orderInfo = "Thanh toán đơn hàng mua xe qua Momo";
         $amount = "50000";
-        //-$amount = (string)$total
+        //-$amount = (string)$total; // Ép kiểu số tiền về chuỗi theo yêu cầu của API
         $orderId = time() . "";
         $redirectUrl = route('checkout.momo.return');
         $ipnUrl = route('checkout.momo.return');
         $extraData = "";
 
         $requestId = time() . "";
-        $requestType = "payWithATM"; // Hoặc captureWallet / payWithATM payWithCC
+        $requestType = "payWithATM"; // Phương thức thanh toán (payWithATM, captureWallet, payWithCC)
 
-        // Lưu Order vào database với trạng thái pending
+        // Khởi tạo đơn hàng mới và lưu vào cơ sở dữ liệu với trạng thái chờ xử lý
         $order = Order::create([
             'user_id' => Auth::check() ? Auth::id() : null,
             'total_amount' => $total,
@@ -99,7 +99,7 @@ class CheckoutController extends Controller
                     'momo_trans_id' => $request->transId ?? null
                 ]);
 
-                // Trừ tồn kho sản phẩm và cộng số lượng đã bán
+                // Cập nhật số lượng tồn kho và doanh số của sản phẩm
                 foreach ($order->items as $item) {
                     $product = \App\Models\Product::find($item->product_id);
                     if ($product) {
@@ -109,7 +109,7 @@ class CheckoutController extends Controller
                     }
                 }
             }
-            session()->forget('cart'); // Xóa giỏ hàng sau khi thanh toán thành công
+            session()->forget('cart'); // Xóa session giỏ hàng sau khi giao dịch hoàn tất
             return redirect()->route('home')->with('success', 'Thanh toán đơn hàng thành công qua Momo!');
         } else {
             if ($order && $order->payment_status != 'completed') {

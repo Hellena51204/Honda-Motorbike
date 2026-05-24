@@ -8,13 +8,13 @@ use App\Models\Post;
 
 class HomeController extends Controller
 {
-    // Hàm hiển thị Trang chủ
+    // Hiển thị giao diện trang chủ
     public function index()
     {
-        // Lấy 4 sản phẩm mới nhất làm sản phẩm nổi bật
+        // Truy xuất 4 sản phẩm mới nhất từ cơ sở dữ liệu để làm sản phẩm nổi bật
         $featuredProducts = Product::latest()->take(4)->get();
         
-        // Lấy 3 bài viết được đánh dấu nổi bật
+        // Lấy danh sách 3 bài viết nổi bật để hiển thị trên trang chủ
         $featuredPosts = Post::where('is_featured', true)->latest()->take(3)->get();
 
         return view('home', compact('featuredProducts', 'featuredPosts'));

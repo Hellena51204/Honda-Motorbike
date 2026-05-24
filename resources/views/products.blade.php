@@ -149,6 +149,31 @@
     background: #cc0000;
     color: white;
 }
+.search-container {
+    margin: 1rem 0 2rem;
+    position: relative;
+    max-width: 400px;
+}
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1.5rem 0.75rem 3rem;
+    border-radius: 50px;
+    border: 1px solid #ddd;
+    outline: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+.search-input:focus {
+    border-color: #cc0000;
+    box-shadow: 0 0 8px rgba(204, 0, 0, 0.2);
+}
+.search-icon {
+    position: absolute;
+    left: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
 </style>
 
 <div class="products-page container my-4">
@@ -167,6 +192,11 @@
             <button class="filter-btn" data-filter="Tay Ga Cao Cấp">Tay Ga Cao Cấp</button>
             <button class="filter-btn" data-filter="Xe Thể Thao">Xe Thể Thao</button>
         </div>
+    </div>
+
+    <div class="search-container">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="Nhập tên xe để tìm kiếm tức thì..." autocomplete="off">
     </div>
 
     <div class="product-grid-v2" id="product-list">
@@ -209,6 +239,26 @@
     document.addEventListener("DOMContentLoaded", function() {
         const filterBtns = document.querySelectorAll('.filter-btn');
         const productItems = document.querySelectorAll('.product-item');
+        const searchInput = document.getElementById('searchInput');
+        let currentFilter = 'all';
+
+        function filterProducts() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+
+            productItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+                const itemName = item.querySelector('.card-info h3').textContent.toLowerCase();
+
+                const matchesCategory = (currentFilter === 'all' || currentFilter === itemCategory);
+                const matchesSearch = itemName.includes(searchTerm);
+
+                if (matchesCategory && matchesSearch) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -217,20 +267,13 @@
                 this.classList.add('active');
 
                 // Lấy giá trị data-filter của nút
-                const filterValue = this.getAttribute('data-filter');
-
-                // Lặp qua từng sản phẩm để ẩn/hiện
-                productItems.forEach(item => {
-                    const itemCategory = item.getAttribute('data-category');
-
-                    if (filterValue === 'all' || filterValue === itemCategory) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
+                currentFilter = this.getAttribute('data-filter');
+                filterProducts();
             });
         });
+
+        // Lắng nghe sự kiện gõ phím vào ô tìm kiếm
+        searchInput.addEventListener('input', filterProducts);
     });
 </script>
 @endsection

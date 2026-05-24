@@ -3,32 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Product; // Gọi Model Product để tương tác với Database
+use App\Models\Product; // Import model Product để tương tác với cơ sở dữ liệu
 
 class ProductController extends Controller
 {
     /**
-     * Hàm hiển thị trang Danh sách sản phẩm (products.blade.php)
+     * Hiển thị giao diện danh sách toàn bộ sản phẩm
      */
     public function index()
     {
-        // Lấy tất cả sản phẩm từ Database
+        // Truy xuất tất cả dữ liệu sản phẩm từ cơ sở dữ liệu
         $products = Product::all();
 
-        // Gửi biến $products sang file view products.blade.php
+        // Truyền biến chứa danh sách sản phẩm sang giao diện view
         return view('products', compact('products'));
     }
 
     /**
-     * Hàm hiển thị trang Chi tiết sản phẩm (detail.blade.php)
+     * Hiển thị giao diện chi tiết của một sản phẩm
      */
     public function show($id)
     {
-        // Tìm sản phẩm trong DB theo ID
-        // findOrFail: Nếu khách hàng gõ bừa ID không có thật trên thanh địa chỉ, nó sẽ báo lỗi 404 chứ không sập web
+        // Tìm kiếm sản phẩm theo ID
+        // Hàm findOrFail sẽ trả về lỗi 404 nếu không tìm thấy ID sản phẩm, ngăn chặn lỗi hệ thống
         $product = Product::findOrFail($id);
 
-        // Gửi dữ liệu chiếc xe vừa tìm được sang file detail.blade.php
+        // Chuyển dữ liệu sản phẩm đã tìm thấy sang giao diện view chi tiết
         return view('detail', compact('product'));
     }
 }

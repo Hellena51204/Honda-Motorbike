@@ -21,19 +21,42 @@ class DashboardController extends Controller
             $totalUsers    = User::where('role', '!=', 'admin')->count();
             $totalOrders   = \App\Models\Order::count();
             
-            // For new dashboard stats
+            // Lấy dữ liệu thống kê tổng quan cho Admin Dashboard
             $totalRevenue = \App\Models\Order::where('payment_status', 'completed')->sum('total_amount');
             $pendingOrders = \App\Models\Order::where('payment_status', 'pending')->count();
             $recentOrders = \App\Models\Order::with(['user', 'items'])->orderBy('created_at', 'desc')->take(5)->get();
 
-            // Admin dùng layout riêng có sidebar (layouts.admin)
+            // Tính toán dữ liệu doanh thu trong 6 tháng gần nhất để vẽ biểu đồ
+            $revenueLabels = [];
+            $revenueData = [];
+            for ($i = 5; $i >= 0; $i--) {
+                $date = \Carbon\Carbon::now()->subMonths($i);
+                $revenueLabels[] = "Tháng " . $date->month;
+                
+                $revenue = \App\Models\Order::where('payment_status', 'completed')
+                    ->whereYear('created_at', $date->year)
+                    ->whereMonth('created_at', $date->month)
+                    ->sum('total_amount');
+                $revenueData[] = $revenue;
+            }
+
+            // Thống kê số lượng sản phẩm theo từng danh mục
+            $productsByCategory = \App\Models\Product::select('category', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+                ->groupBy('category')
+                ->pluck('total', 'category')->toArray();
+            
+            $categoryLabels = array_keys($productsByCategory);
+            $categoryData = array_values($productsByCategory);
+
+            // Trả về giao diện Dashboard dành riêng cho Admin
             return view('dashboard.admin', compact(
                 'totalProducts', 'totalUsers', 'totalOrders', 'user',
-                'totalRevenue', 'pendingOrders', 'recentOrders'
+                'totalRevenue', 'pendingOrders', 'recentOrders',
+                'revenueLabels', 'revenueData', 'categoryLabels', 'categoryData'
             ));
         }
 
-        // User thường dùng layout app.blade.php
+        // Trả về giao diện Dashboard mặc định cho người dùng
         return view('dashboard.user', compact('user'));
     }
 
@@ -82,12 +105,12 @@ class DashboardController extends Controller
 
         $user = Auth::user();
 
-        // Xóa ảnh cũ nếu có
+        // Xóa tệp ảnh đại diện cũ khỏi hệ thống lưu trữ nếu tồn tại
         if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
             Storage::disk('public')->delete($user->avatar);
         }
 
-        // Lưu ảnh mới
+        // Lưu trữ tệp ảnh mới và cập nhật đường dẫn vào cơ sở dữ liệu
         $path = $request->file('avatar')->store('avatars', 'public');
         $user->update(['avatar' => $path]);
 

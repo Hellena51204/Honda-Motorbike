@@ -7,21 +7,21 @@ use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    // Hàm hiển thị trang danh sách bài viết
+    // Lấy danh sách các bài viết để hiển thị trên trang chủ Blog
     public function index()
     {
-        // Lấy bài viết mới nhất, phân trang 9 bài / 1 trang
+        // Lấy các bài viết mới nhất và phân trang 9 bài một trang
         $posts = Post::latest()->paginate(9);
         return view('blog.index', compact('posts'));
     }
 
-    // Hàm hiển thị trang chi tiết của 1 bài viết cụ thể
+    // Hiển thị nội dung chi tiết của một bài viết cụ thể
     public function show($id)
     {
-        // Tìm bài viết theo ID, nếu không thấy sẽ tự động báo lỗi 404
+        // Tìm kiếm bài viết theo ID, trả về lỗi 404 nếu không tìm thấy
         $post = Post::findOrFail($id);
         
-        // Trả về view show.blade.php kèm dữ liệu $post
+        // Truyền dữ liệu bài viết sang view chi tiết
         return view('blog.show', compact('post'));
     }
 }

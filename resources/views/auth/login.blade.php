@@ -21,6 +21,12 @@
             </div>
             @endif
 
+            @if(session('success'))
+            <div class="alert alert-success rounded-3 py-2 small fw-bold">
+                <i class="fa-solid fa-circle-check me-1"></i> {{ session('success') }}
+            </div>
+            @endif
+
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
@@ -41,19 +47,11 @@
                 </div>
 
                 <div class="text-end mb-4">
-                    <a href="#" class="text-danger text-decoration-none small fw-bold">Forgot Password?</a>
+                    <a href="{{ route('password.request') }}" class="text-danger text-decoration-none small fw-bold">Forgot Password?</a>
                 </div>
 
                 <button type="submit" class="btn text-white w-100 py-3 rounded-pill fw-bold fs-5 shadow" style="background-color: #cc0000;">
                     Sign In
-                </button>
-
-                <div class="text-center mt-4 mb-3">
-                    <span class="text-muted small">Or continue with</span>
-                </div>
-                <button type="button" class="btn btn-outline-secondary w-100 py-2 rounded-pill fw-bold bg-white text-dark">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="20" class="me-2">
-                    Sign in with Google
                 </button>
 
                 <div class="text-center mt-4">

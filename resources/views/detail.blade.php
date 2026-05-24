@@ -60,6 +60,17 @@
                 <span class="ms-3 text-secondary text-decoration-line-through">Giá đề xuất</span>
             </div>
 
+            <div class="mb-3">
+                <p class="mb-0 fs-5">
+                    <span class="fw-bold me-2">Tình trạng:</span> 
+                    @if($product->stock > 0)
+                        <span class="text-success fw-bold"><i class="fa-solid fa-circle-check"></i> Còn hàng ({{ $product->stock }} chiếc)</span>
+                    @else
+                        <span class="text-danger fw-bold"><i class="fa-solid fa-circle-xmark"></i> Hết hàng</span>
+                    @endif
+                </p>
+            </div>
+
             <div class="mb-4">
                 <h5 class="fw-bold">Mô tả sản phẩm:</h5>
                 <p class="text-secondary leading-relaxed">
@@ -82,12 +93,18 @@
                 <a href="{{ route('contact.index') }}" class="btn btn-dark btn-lg px-5 py-3 rounded-pill fw-bold shadow-sm">
                     <i class="fa-solid fa-calendar-check me-2"></i> ĐĂNG KÝ LÁI THỬ
                 </a>
+                @if($product->stock > 0)
                 <form action="{{ route('cart.add', $product->id) }}" method="POST" class="m-0">
                     @csrf
                     <button type="submit" class="btn btn-outline-danger btn-lg px-4 py-3 rounded-pill fw-bold border-2 w-100">
                         <i class="fa-solid fa-cart-plus me-2"></i> MUA HÀNG
                     </button>
                 </form>
+                @else
+                <button type="button" class="btn btn-secondary btn-lg px-4 py-3 rounded-pill fw-bold border-2 m-0" disabled>
+                    <i class="fa-solid fa-ban me-2"></i> TẠM HẾT HÀNG
+                </button>
+                @endif
             </div>
 
             <div class="mt-4 p-3 bg-white border rounded-3 d-flex align-items-center">

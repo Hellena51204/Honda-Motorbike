@@ -11,19 +11,19 @@ class ChatController extends Controller
 {
     public function store(Request $request)
     {
-        // Lưu tin nhắn vào Database (Dùng Model ChatMessage đã tạo hôm trước)
+        // Khởi tạo và lưu trữ tin nhắn vào cơ sở dữ liệu thông qua model ChatMessage
         $message = new ChatMessage();
         $message->message = $request->message;
         $message->is_admin_reply = false;
 
         if (Auth::check()) {
-            $message->user_id = Auth::id(); // Nếu đã đăng nhập thì lưu ID
+            $message->user_id = Auth::id(); // Liên kết tin nhắn với ID người dùng nếu đã đăng nhập
         } else {
-            $message->session_id = session()->getId(); // Nếu là khách lạ thì lưu Session
+            $message->session_id = session()->getId(); // Lưu ID phiên làm việc đối với khách vãng lai
         }
         $message->save();
 
-        // Trả về phản hồi cho JS (Có thể nâng cấp hàm này để nhận diện từ khóa)
+        // Trả về phản hồi JSON cho client
         return response()->json([
             'status' => 'success',
             'reply' => 'Tin nhắn của bạn đã được gửi đến Admin. Chúng tôi sẽ phản hồi sớm nhất!'
@@ -32,7 +32,7 @@ class ChatController extends Controller
 
     public function adminIndex()
     {
-        // Lấy danh sách các khách hàng có gửi tin nhắn, kèm tin nhắn mới nhất
+        // Truy xuất danh sách khách hàng đã nhắn tin cùng với tin nhắn gần nhất
         $chats = ChatMessage::select('user_id', 'session_id', DB::raw('MAX(created_at) as last_chat'))
             ->groupBy('user_id', 'session_id')
             ->orderBy('last_chat', 'desc')
@@ -42,7 +42,7 @@ class ChatController extends Controller
 
     public function adminShow($id)
     {
-        // Truy vấn lịch sử chat dựa trên user_id (hoặc session_id nếu là khách lạ)
+        // Lấy toàn bộ lịch sử tin nhắn dựa trên mã định danh của khách hàng
         $messages = ChatMessage::where('user_id', $id)
             ->orWhere('session_id', $id)
             ->orderBy('created_at', 'asc')
@@ -54,7 +54,7 @@ class ChatController extends Controller
     {
         $message = new ChatMessage();
         $message->message = $request->message;
-        $message->is_admin_reply = true; // Đánh dấu đây là tin nhắn của Admin
+        $message->is_admin_reply = true; // Gắn cờ xác định tin nhắn này xuất phát từ tài khoản quản trị viên
         $message->user_id = is_numeric($id) ? $id : null;
         $message->session_id = !is_numeric($id) ? $id : null;
         $message->save();
